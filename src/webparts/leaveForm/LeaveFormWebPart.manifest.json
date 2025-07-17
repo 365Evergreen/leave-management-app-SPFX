@@ -27,6 +27,7 @@
     "officeFabricIconFontName": "Page",
     "properties": {
       "description": "Leave-Form"
-    }
+    },
+     "supportsFullBleed": true
   }]
 }
