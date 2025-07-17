@@ -16,7 +16,7 @@ export default class LeaveForm extends React.Component<ILeaveFormProps> {
             alignItems: 'center',
           }}
         >
-          <h1>Leave Management System</h1>
+          <h1>Leave Management System...</h1>
           {/* <p>Manage your time off requests efficiently</p> */}
 
           <Header />

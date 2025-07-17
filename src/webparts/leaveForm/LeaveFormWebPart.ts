@@ -36,7 +36,18 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
     ReactDom.render(element, this.domElement);
   }
 
+  protected get isRenderAsync(): boolean {
+    return true;
+  }
+
   protected onInit(): Promise<void> {
+
+    // Set display mode to full-width
+    this.domElement.style.margin = "0";
+    this.domElement.style.padding = "0";
+    this.domElement.style.height = "100vh";
+    this.domElement.style.width = "100vw";
+
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
     });
