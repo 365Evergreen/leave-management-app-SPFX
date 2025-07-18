@@ -26,23 +26,62 @@ const Header = () => {
         styles={{
           root: {
             display: 'flex',
-            gap: 20,
+            gap: 10,
           },
         }}>
         {activePage === 'dashboard' ? (
           <>
-            <PrimaryButton iconProps={{ iconName: 'ViewDashboard' }} text="Dashboard" className="btn" onClick={() => setActivePage('dashboard')} />
-            <PrimaryButton iconProps={{ iconName: 'Add' }} text="Request Leave" className="btn" onClick={() => setActivePage('request')} />
-            <PrimaryButton iconProps={{ iconName: 'History' }} text="Leave History" className="btn" onClick={() => setActivePage('history')} />
+            <PrimaryButton
+              iconProps={{ iconName: 'ViewDashboard' }}
+              styles={{
+                icon: {
+                  color: '#008272',
+                }
+              }}
+              text="Dashboard"
+              className="btn"
+              onClick={() => setActivePage('dashboard')}
+            />
+            <PrimaryButton
+              iconProps={{ iconName: 'Add' }}
+              styles={{
+                icon: {
+                  color: '#0078D7',
+                }
+              }}
+              text="Request Leave"
+              className="btn"
+              onClick={() => setActivePage('request')}
+            />
+            <PrimaryButton
+              iconProps={{ iconName: 'History' }}
+              styles={{
+                icon: {
+                  color: '#037362',
+                }
+              }}
+              text="Leave History"
+              className="btn"
+              onClick={() => setActivePage('history')}
+            />
           </>
         ) : (
-          <DefaultButton iconProps={{ iconName: 'NavigateBack' }} text="Back to Dashboard" className="btn" onClick={() => setActivePage('dashboard')} />
+          <DefaultButton
+            iconProps={{ iconName: 'NavigateBack' }}
+            styles={{
+              icon: {
+                color: '#037362',
+              }
+            }}
+            text="Back to Dashboard"
+            className="btn"
+            onClick={() => setActivePage('dashboard')}
+          />
         )}
       </Stack>
-
-      <div style={{ padding: 20 }}>
+      <Stack style={{ padding: 20 }}>
         <PageComponent />
-      </div>
+      </Stack>
     </>
   );
 };

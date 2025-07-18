@@ -9,7 +9,24 @@
 }
 
 .fullPageContainer {
-  background-color: #e8f0fb ;
+  // background-color: #e8f0fb ;
+  background-color: transparent ;
+
 
 }
 
+/* 🛑 Hide SharePoint page chrome */
+:global(.ms-compositeHeader, .ms-CommandBar, .ms-FocusZone, .od-SuiteNav, .od-Header) {
+  display: none !important;
+}
+
+:global(.ms-compositeHeader + div) {
+  margin-top: 0 !important;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
