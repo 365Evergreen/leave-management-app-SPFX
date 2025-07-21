@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Dashboard from '../pages/dashboard/Dashboard';
-import Request from '../pages/dashboard/request/Request';
-import History from '../pages/dashboard/history/History';
+import Request from '../pages/request/Request';
+import History from '../pages/history/History';
 import { Stack, DefaultButton, PrimaryButton } from '@fluentui/react';
 import './Header.css';
 
