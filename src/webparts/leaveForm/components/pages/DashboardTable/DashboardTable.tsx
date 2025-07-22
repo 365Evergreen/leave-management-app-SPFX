@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, PrimaryButton, Icon } from '@fluentui/react';
+import { useNavigate } from 'react-router-dom';
 
 const statusColors: Record<'Approved' | 'Pending' | 'Rejected', string>= {
     Approved: 'rgba(0, 128, 0, 0.1)',
@@ -22,6 +23,9 @@ interface Item {
 
 
 const DashboardTable = () => {
+
+    const navigate = useNavigate();
+
     // Sample data
     const items = [
         { key: 1, name: 'Annual Leave', status: 'Approved', date: '2024-07-01', days:"3 Days" },
@@ -104,7 +108,7 @@ const DashboardTable = () => {
                         }
                     }}
                     text="Add Leave"
-                    onClick={() => alert('Add Leave clicked')}
+                    onClick={() => navigate('/request')}
                 />
             </div>
 

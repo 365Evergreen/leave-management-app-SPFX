@@ -4,4 +4,5 @@ export interface ILeaveFormProps {
   environmentMessage: string;
   hasTeamsContext: boolean;
   userDisplayName: string;
+  siteUrl: string;
 }
