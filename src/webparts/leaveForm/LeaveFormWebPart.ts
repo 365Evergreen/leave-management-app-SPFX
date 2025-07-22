@@ -22,6 +22,10 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
   private _environmentMessage: string = '';
 
   public render(): void {
+
+    const siteUrl = this.context.pageContext.web.absoluteUrl;
+    console.log("🌐 Current Site URL:", siteUrl);
+
     const element: React.ReactElement<ILeaveFormProps> = React.createElement(
       LeaveForm,
       {
@@ -29,7 +33,8 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
         isDarkTheme: this._isDarkTheme,
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName
+        userDisplayName: this.context.pageContext.user.displayName,
+        siteUrl: siteUrl
       }
     );
 
@@ -41,13 +46,6 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
   }
 
   protected onInit(): Promise<void> {
-
-    // Set display mode to full-width
-    // this.domElement.style.margin = "0";
-    // this.domElement.style.padding = "0";
-    // this.domElement.style.height = "100vh";
-    // this.domElement.style.width = "100vw";
-
     return this._getEnvironmentMessage().then(message => {
       this._environmentMessage = message;
     });

@@ -1,86 +1,73 @@
 import * as React from 'react';
-import Dashboard from '../pages/dashboard/Dashboard';
-import Request from '../pages/request/Request';
-import History from '../pages/history/History';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Stack, DefaultButton, PrimaryButton } from '@fluentui/react';
 import './Header.css';
 
-
 const Header = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const [activePage, setActivePage] = React.useState('dashboard')
-
-  // Page map: associate page names with components
-  const pageMap: Record<string, React.FC> = {
-    dashboard: Dashboard,
-    request: Request,
-    history: History,
-  };
-
-  // Select the current page component
-  const PageComponent = pageMap[activePage] || Dashboard;
+  // Navigation items configuration
+  const navItems = [
+    {
+      key: 'dashboard',
+      path: '/',
+      iconName: 'ViewDashboard',
+      iconColor: '#008272',
+      text: 'Dashboard'
+    },
+    {
+      key: 'request',
+      path: '/request',
+      iconName: 'Add',
+      iconColor: '#0078D7',
+      text: 'Request Leave'
+    },
+    {
+      key: 'history',
+      path: '/history',
+      iconName: 'History',
+      iconColor: '#037362',
+      text: 'Leave History'
+    }
+  ];
 
   return (
     <>
-      <Stack horizontal tokens={{ childrenGap: 10 }}
-        styles={{
-          root: {
-            display: 'flex',
-            gap: 10,
-          },
-        }}>
-        {activePage === 'dashboard' ? (
-          <>
+      <Stack horizontal tokens={{ childrenGap: 10 }} styles={{
+        root: {
+          display: 'flex',
+          gap: 10,
+          marginBottom:'20px'
+        },
+      }}>
+        {location.pathname === '/' ? (
+          navItems.map((item) => (
             <PrimaryButton
-              iconProps={{ iconName: 'ViewDashboard' }}
+              key={item.key}
+              onClick={() => navigate(item.path)}
+              iconProps={{ iconName: item.iconName }}
               styles={{
-                icon: {
-                  color: '#008272',
+                icon: { color: item.iconColor },
+                root: {
+                  backgroundColor: location.pathname === item.path ? '#f3f2f1' : '',
                 }
               }}
-              text="Dashboard"
+              text={item.text}
               className="btn"
-              onClick={() => setActivePage('dashboard')}
             />
-            <PrimaryButton
-              iconProps={{ iconName: 'Add' }}
-              styles={{
-                icon: {
-                  color: '#0078D7',
-                }
-              }}
-              text="Request Leave"
-              className="btn"
-              onClick={() => setActivePage('request')}
-            />
-            <PrimaryButton
-              iconProps={{ iconName: 'History' }}
-              styles={{
-                icon: {
-                  color: '#037362',
-                }
-              }}
-              text="Leave History"
-              className="btn"
-              onClick={() => setActivePage('history')}
-            />
-          </>
+          ))
         ) : (
           <DefaultButton
             iconProps={{ iconName: 'NavigateBack' }}
             styles={{
-              icon: {
-                color: '#037362',
-              }
+              icon: { color: '#037362' }
             }}
             text="Back to Dashboard"
             className="btn"
-            onClick={() => setActivePage('dashboard')}
+            onClick={() => navigate('/')}
           />
         )}
-      </Stack>
-      <Stack style={{ padding: 20 }}>
-        <PageComponent />
       </Stack>
     </>
   );
