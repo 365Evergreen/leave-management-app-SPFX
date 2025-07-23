@@ -9,7 +9,7 @@
 }
 
 .div1 {
-    background-color: rgba(96, 153, 253, 0.2);
+    background-color: var(--total-leave);
     color: black;
     display: flex; 
     justify-content: space-between; 
@@ -20,7 +20,7 @@
 
 
 .div2 {
-    background-color: rgba(253, 211, 96, 0.2);
+    background-color: var(--pending-leave);
     color: black;
     display: flex; 
     justify-content: space-between; 
@@ -29,7 +29,7 @@
 }
 
 .div3 {
-    background-color: rgba(148, 253, 96, 0.2);
+    background-color: var(--approved-leave);
     color: black;
     display: flex; 
     justify-content: space-between; 
@@ -38,7 +38,7 @@
 }
 
 .div4 {
-    background-color: rgba(253, 96, 96, 0.2);
+    background-color: var(--rejected-leave);
     color: black;
     display: flex; 
     justify-content: space-between; 

@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, PrimaryButton, Icon } from '@fluentui/react';
 import { useNavigate } from 'react-router-dom';
+import CustomPagination from '../../pagination/Pagination';
 
-const statusColors: Record<'Approved' | 'Pending' | 'Rejected', string>= {
-    Approved: 'rgba(0, 128, 0, 0.1)',
-    Pending: 'rgba(255, 215, 0, 0.1)',
-    Rejected: 'rgba(255, 0, 0, 0.1)'
+const PAGE_SIZE = 5;
+
+const statusColors: Record<'Approved' | 'Pending' | 'Rejected', string> = {
+    Approved: 'var(--status-approved)',
+    Pending: 'var(--status-pending)',
+    Rejected: 'var(--status-rejected)'
 };
 
 const textColors: Record<'Approved' | 'Pending' | 'Rejected', string> = {
@@ -23,16 +26,25 @@ interface Item {
 
 
 const DashboardTable = () => {
-
     const navigate = useNavigate();
 
     // Sample data
     const items = [
-        { key: 1, name: 'Annual Leave', status: 'Approved', date: '2024-07-01', days:"3 Days" },
-        { key: 2, name: 'Sick Leave', status: 'Pending', date: '2024-07-05', days:"2 Days"},
-        { key: 3, name: 'Casual Leave', status: 'Rejected', date: '2024-07-10', days:"5 Days" },
-        // Add more items here
+        { key: 1, name: 'Annual Leave', status: 'Approved', date: '2024-07-01', days: "3 Days" },
+        { key: 2, name: 'Sick Leave', status: 'Pending', date: '2024-07-05', days: "2 Days" },
+        { key: 3, name: 'Casual Leave', status: 'Rejected', date: '2024-07-10', days: "5 Days" },
+        { key: 4, name: 'Casual Leave', status: 'Pending', date: '2024-07-10', days: "5 Days" },
+        { key: 5, name: 'Casual Leave', status: 'Approved', date: '2024-07-10', days: "5 Days" },
+        { key: 6, name: 'Casual Leave', status: 'Pending', date: '2024-07-10', days: "5 Days" },
+        { key: 7, name: 'Casual Leave', status: 'Approved', date: '2024-07-10', days: "5 Days" },
     ];
+
+    const [currentPage, setCurrentPage] = React.useState(1);
+
+    const pagedItems = items.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        currentPage * PAGE_SIZE
+    );
 
     const columns: IColumn[] = [
         {
@@ -97,14 +109,25 @@ const DashboardTable = () => {
                 marginBottom: '10px'
             }}>
                 <div>
-                    <Icon iconName="Calendar" styles={{ root: { fontSize: 20, color: '#0078D7' } }} />
-                    <span style={{ marginLeft: 8 }}>Upcoming Leave Schedule</span>
+                    <Icon iconName="Calendar" styles={{ root: { fontSize: 20, color: 'var(--theme-color)' } }} />
+                    <span style={{ marginLeft: 8, fontWeight: 600, fontSize: '21px' }}>Upcoming Leave Schedule.</span>
                 </div>
                 <PrimaryButton
                     iconProps={{ iconName: 'Add' }}
                     styles={{
                         root: {
-                            borderRadius: "8px",
+                            borderRadius: '8px',
+                            backgroundColor: 'var(--theme-color)',
+                            border: 'none',
+                            color: 'white',
+                        },
+                        rootHovered: {
+                            backgroundColor: 'var(--theme-color-hover)', 
+                            color: 'white',
+                        },
+                        rootPressed: {
+                            backgroundColor: 'var(--theme-color-active)',
+                            color: 'white',
                         }
                     }}
                     text="Add Leave"
@@ -113,13 +136,27 @@ const DashboardTable = () => {
             </div>
 
             <DetailsList
-                items={items}
+                items={pagedItems}
                 columns={columns}
                 setKey="set"
                 layoutMode={DetailsListLayoutMode.fixedColumns}
                 selectionMode={SelectionMode.none}
                 isHeaderVisible={true}
             />
+
+            <div
+                style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginTop: 16
+                }}
+            >
+                <CustomPagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(items.length / PAGE_SIZE)}
+                    onPageChange={setCurrentPage}
+                />
+            </div>
         </div>
     );
 }

@@ -27,12 +27,12 @@ const Main = () => {
               variant="xxLarge"
               styles={{
                 root: {
-                  color: '#0078D7',
+                  color: 'var(--theme-color)',
                   fontFamily: 'Segoe UI',
                 },
               }}
             >
-              Leave Management System.
+              Leave Management System
             </Text>
 
             <Text
