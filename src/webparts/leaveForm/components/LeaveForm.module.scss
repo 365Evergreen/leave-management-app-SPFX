@@ -9,24 +9,24 @@
 }
 
 .fullPageContainer {
-  // background-color: #e8f0fb ;
   background-color: transparent ;
-
-
 }
 
-/* 🛑 Hide SharePoint page chrome */
-:global(.ms-compositeHeader, .ms-CommandBar, .ms-FocusZone, .od-SuiteNav, .od-Header) {
-  display: none !important;
-}
 
-:global(.ms-compositeHeader + div) {
-  margin-top: 0 !important;
-}
+:root {
+  /* Primary Theme Color */
+  --theme-color: #0078D7;        
+  --theme-color-hover: #106EBE;  
+  --theme-color-active: #005A9E;     
 
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  overflow: hidden;
+  /* status highlights */
+  --total-leave: rgba(96, 153, 253, 0.2);     
+  --pending-leave: rgba(253, 211, 96, 0.2);   
+  --approved-leave: rgba(148, 253, 96, 0.2);  
+  --rejected-leave: rgba(253, 96, 96, 0.2);  
+
+   /* Status Colors */
+  --status-approved: rgba(40, 167, 69, 0.1); 
+  --status-pending: rgba(255, 193, 7, 0.1);   
+  --status-rejected: rgba(220, 53, 69, 0.1);
 }
