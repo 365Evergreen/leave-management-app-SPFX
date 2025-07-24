@@ -1,0 +1,21 @@
+/* form.module.scss or form.css */
+.submit-button {
+  background-color: var(--theme-color);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: var(--theme-color-hover);
+}
+
+.submit-button:active {
+  background-color: var(--theme-color-active);
+}
+
+.label-text {
+  color: var(--theme-color);
+}
