@@ -14,3 +14,11 @@
   color: rgb(0, 0, 0);
   border: none;
 }
+
+.left-align {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 10px 0;
+  margin-right: 700px
+}

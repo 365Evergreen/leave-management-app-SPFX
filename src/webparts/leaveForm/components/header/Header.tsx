@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Stack, DefaultButton, PrimaryButton } from '@fluentui/react';
+import { Stack, DefaultButton, PrimaryButton, Text } from '@fluentui/react';
 import './Header.css';
+
 
 const Header = () => {
   const location = useLocation();
@@ -32,32 +33,68 @@ const Header = () => {
     }
   ];
 
-  return (
-    <>
-      <Stack horizontal tokens={{ childrenGap: 10 }} styles={{
-        root: {
-          display: 'flex',
-          gap: 10,
-          marginBottom:'20px'
-        },
-      }}>
-        {location.pathname === '/' ? (
-          navItems.map((item) => (
-            <PrimaryButton
-              key={item.key}
-              onClick={() => navigate(item.path)}
-              iconProps={{ iconName: item.iconName }}
-              styles={{
-                icon: { color: item.iconColor },
-                root: {
-                  backgroundColor: location.pathname === item.path ? '#f3f2f1' : '',
-                }
-              }}
-              text={item.text}
-              className="btn"
-            />
-          ))
-        ) : (
+ return (
+  <>
+    {location.pathname === '/' && (
+      <Stack
+        styles={{
+          root: {
+            marginBottom: 25,
+            textAlign: 'center',
+          },
+        }}
+      >
+        <Text
+          variant="xxLarge"
+          styles={{
+            root: {
+              color: 'var(--theme-color)',
+              fontFamily: 'Segoe UI',
+            },
+          }}
+        >
+          Leave Management System.
+        </Text>
+
+        <Text
+          variant="mediumPlus"
+          styles={{
+            root: {
+              color: '#666',
+              fontFamily: 'Segoe UI',
+            },
+          }}
+        >
+          Manage your time off requests efficiently
+        </Text>
+      </Stack>
+    )}
+
+    <Stack horizontal tokens={{ childrenGap: 10 }} styles={{
+      root: {
+        display: 'flex',
+        gap: 10,
+        marginBottom: '20px'
+      },
+    }}>
+      {location.pathname === '/' ? (
+        navItems.map((item) => (
+          <PrimaryButton
+            key={item.key}
+            onClick={() => navigate(item.path)}
+            iconProps={{ iconName: item.iconName }}
+            styles={{
+              icon: { color: item.iconColor },
+              root: {
+                backgroundColor: location.pathname === item.path ? '#f3f2f1' : '',
+              }
+            }}
+            text={item.text}
+            className="btn"
+          />
+        ))
+      ) : (
+        <div className='left-align'>
           <DefaultButton
             iconProps={{ iconName: 'NavigateBack' }}
             styles={{
@@ -67,10 +104,12 @@ const Header = () => {
             className="btn"
             onClick={() => navigate('/')}
           />
-        )}
-      </Stack>
-    </>
-  );
+        </div>
+      )}
+    </Stack>
+  </>
+);
+
 };
 
 export default Header;
