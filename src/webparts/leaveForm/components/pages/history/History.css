@@ -1,0 +1,81 @@
+.parent-div {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 8px;
+    width: 80vw;
+    height: 15vh;
+    margin-bottom: 20px;
+}
+
+.Leave-history{
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.box1 {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+
+
+.box2 {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.box3 {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.box4 {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.box1 .num {
+    color: green;
+    font-weight: bold;
+}
+
+.box2 .num {
+    color: brown;
+    font-weight: bold;
+}
+
+.box3 .num {
+    color: red;
+    font-weight: bold;
+}
+
+.box4 .num {
+    color: blue;
+    font-weight: bold;
+}
+
