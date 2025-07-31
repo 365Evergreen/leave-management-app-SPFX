@@ -2,7 +2,7 @@ import * as React from 'react';
 import './History.css'
 
 const LeaveHistory = () => {
-    // Sample data - replace this with your SharePoint list data
+    // Sample data - replace this with SharePoint list data
     const leaveHistoryData = [
         {
             id: 1,
