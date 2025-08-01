@@ -20,7 +20,7 @@ const leaveTypeOptions = [
 
 const Request = () => {
     const [formData, setFormData] = useState({
-        leaveType:  undefined,
+        leaveType: undefined,
         startDate: undefined as Date | undefined,
         endDate: undefined as Date | undefined,
         reason: "",
@@ -54,12 +54,12 @@ const Request = () => {
     const handleSubmit = () => {
         console.log("Form Datas", formData);
         setFormData({
-        leaveType: undefined ,
-        startDate: undefined,
-        endDate: undefined,
-        reason: "",
-        attachments: [] as File[]
-    })
+            leaveType: undefined,
+            startDate: undefined,
+            endDate: undefined,
+            reason: "",
+            attachments: [] as File[]
+        })
     }
     return (
         <Stack tokens={{ childrenGap: 20, padding: 20 }} styles={{ root: { width: 600 } }}>
