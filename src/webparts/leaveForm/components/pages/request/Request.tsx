@@ -7,10 +7,16 @@ import {
     DefaultButton,
     Stack,
     Label,
-    Icon
+    Icon,
+    MessageBar,
+    MessageBarType
 } from '@fluentui/react';
 import { useState } from 'react';
 import './Request.css'
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '../../../redux/store';
+import { submitLeave } from '../../../redux/leaveSlice';
+import { useNavigate } from 'react-router-dom';
 
 const leaveTypeOptions = [
     { key: 'sick', text: 'Sick Leave' },
@@ -18,8 +24,21 @@ const leaveTypeOptions = [
     { key: 'earned', text: 'Earned Leave' },
 ];
 
+export interface LeaveFormData {
+    leaveType?: string;
+    startDate?: Date;
+    endDate?: Date;
+    reason: string;
+    attachments: File[];
+}
+
 const Request = () => {
-    const [formData, setFormData] = useState({
+    const navigate = useNavigate()
+    const dispstch = useDispatch<AppDispatch>()
+    const { loading, success, error } = useSelector((state: RootState) => state.leave)
+    const [formSubmitted, setFormSubmitted] = useState(false);
+
+    const [formData, setFormData] = useState<LeaveFormData>({
         leaveType: undefined,
         startDate: undefined as Date | undefined,
         endDate: undefined as Date | undefined,
@@ -52,6 +71,13 @@ const Request = () => {
     };
 
     const handleSubmit = () => {
+        setFormSubmitted(true);
+        // Basic validation
+        if (!formData.leaveType || !formData.startDate || !formData.endDate || !formData.reason) {
+            return;
+        }
+
+        dispstch(submitLeave(formData))
         console.log("Form Datas", formData);
         setFormData({
             leaveType: undefined,
@@ -60,44 +86,59 @@ const Request = () => {
             reason: "",
             attachments: [] as File[]
         })
+        setFormSubmitted(false);
     }
     return (
         <Stack tokens={{ childrenGap: 20, padding: 20 }} styles={{ root: { width: 600 } }}>
             {/* Leave Type */}
             <Dropdown
-                label="Leave Type *"
+                label="Leave Type"
                 placeholder="Select leave type"
                 options={leaveTypeOptions}
                 selectedKey={formData.leaveType}
                 onChange={(e, options) => handlechange('leaveType', options?.key)}
+                errorMessage={formSubmitted && !formData.leaveType ? "Leave Type is required" : undefined}
             />
 
             {/* Start & End Date */}
             <Stack horizontal tokens={{ childrenGap: 20 }}>
-                <DatePicker
-                    label="Start Date *"
-                    placeholder="Pick a date"
-                    styles={{ root: { flex: 1 } }}
-                    value={formData.startDate}
-                    onSelectDate={(date) => handlechange('startDate', date)}
-                />
-                <DatePicker
-                    label="End Date *"
-                    placeholder="Pick a date"
-                    styles={{ root: { flex: 1 } }}
-                    value={formData.endDate}
-                    onSelectDate={(date) => handlechange('endDate', date)}
-                />
+                <Stack styles={{ root: { flex: 1 } }}>
+                    <DatePicker
+                        label="Start Date"
+                        placeholder="Pick a date"
+                        value={formData.startDate}
+                        onSelectDate={(date) => handlechange('startDate', date)}
+                        ariaLabel="Select a start date"
+                        formatDate={(date) => (date ? date.toLocaleDateString() : '')}
+                    />
+                    {formSubmitted && !formData.startDate && (
+                        <span style={{ color: 'red', fontSize: 12 }}>Start Date is required</span>
+                    )}
+                </Stack>
+                <Stack styles={{ root: { flex: 1 } }}>
+                    <DatePicker
+                        label="End Date"
+                        placeholder="Pick a date"
+                        value={formData.endDate}
+                        onSelectDate={(date) => handlechange('endDate', date)}
+                        ariaLabel="Select an end date"
+                        formatDate={(date) => (date ? date.toLocaleDateString() : '')}
+                    />
+                    {formSubmitted && !formData.endDate && (
+                        <span style={{ color: 'red', fontSize: 12 }}>End Date is required</span>
+                    )}
+                </Stack>
             </Stack>
 
             {/* Reason */}
             <TextField
-                label="Reason *"
+                label="Reason"
                 multiline
                 rows={3}
                 placeholder="Please provide a brief reason for your leave..."
                 value={formData.reason}
                 onChange={(e, newValue) => handlechange('reason', newValue)}
+                errorMessage={formSubmitted && !formData.reason ? "Reason is required" : undefined}
             />
 
             {/* File Upload Section */}
@@ -151,9 +192,25 @@ const Request = () => {
 
             {/* Buttons */}
             <Stack horizontal tokens={{ childrenGap: 10 }}>
-                <PrimaryButton text="Submit Request" className='submit-button' onClick={handleSubmit} />
-                <DefaultButton text="Cancel" />
+                <PrimaryButton
+                    text={loading ? "Submitting..." : "Submit Request"}
+                    onClick={handleSubmit}
+                    disabled={loading}
+                />
+                <DefaultButton text="Cancel" onClick={() => navigate('/')} />
             </Stack>
+
+            {/* Show success or error message */}
+            {success && (
+                <MessageBar messageBarType={MessageBarType.success} isMultiline={false}>
+                    Leave request submitted successfully!
+                </MessageBar>
+            )}
+            {error && (
+                <MessageBar messageBarType={MessageBarType.error} isMultiline={false}>
+                    {error}
+                </MessageBar>
+            )}
         </Stack>
     )
 }
