@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { LeaveFormData } from "../components/pages/request/Request";
 
-export const submitLeave = createAsyncThunk(
+export const submitLeave = createAsyncThunk<
+  LeaveFormData,
+  LeaveFormData,
+  { rejectValue: string }
+>(
     "leave/submitLeave",
     async (formData, thunkAPI) => {
         try {
