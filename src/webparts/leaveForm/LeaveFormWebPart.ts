@@ -12,6 +12,13 @@ import * as strings from 'LeaveFormWebPartStrings';
 import LeaveForm from './components/LeaveForm';
 import { ILeaveFormProps } from './components/ILeaveFormProps';
 
+// import { sp } from "@pnp/sp";
+// import "@pnp/sp/webs";
+// import "@pnp/sp/lists";
+// import "@pnp/sp/items";
+
+import { spfi, SPFI } from "@pnp/sp";
+import { SPFx } from "@pnp/sp/presets/all";
 export interface ILeaveFormWebPartProps {
   description: string;
 }
@@ -20,6 +27,7 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
 
   private _isDarkTheme: boolean = false;
   private _environmentMessage: string = '';
+  private _sp: SPFI;
 
   public render(): void {
 
@@ -45,13 +53,18 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
     return true;
   }
 
-  protected onInit(): Promise<void> {
-    return this._getEnvironmentMessage().then(message => {
-      this._environmentMessage = message;
-    });
+  protected async onInit(): Promise<void> {
+    await super.onInit();
+
+    this._sp = spfi().using(SPFx(this.context));
+    console.log("PnPjs properly initialized...");
+
+    this._environmentMessage = await this._getEnvironmentMessage();
   }
 
-
+  protected get sp(): SPFI {
+    return this._sp;
+  }
 
   private _getEnvironmentMessage(): Promise<string> {
     if (!!this.context.sdks.microsoftTeams) { // running in Teams, office.com or Outlook
