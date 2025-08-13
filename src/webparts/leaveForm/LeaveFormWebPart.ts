@@ -31,6 +31,11 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
 
   public render(): void {
 
+    if (!this._sp) {
+      console.log("⏳ Waiting for SP to be ready...");
+      return;
+    }
+
     const siteUrl = this.context.pageContext.web.absoluteUrl;
     console.log("🌐 Current Site URL:", siteUrl);
 
@@ -42,7 +47,8 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
         environmentMessage: this._environmentMessage,
         hasTeamsContext: !!this.context.sdks.microsoftTeams,
         userDisplayName: this.context.pageContext.user.displayName,
-        siteUrl: siteUrl
+        siteUrl: siteUrl,
+        sp: this._sp
       }
     );
 

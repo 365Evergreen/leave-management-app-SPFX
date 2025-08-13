@@ -1,15 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { LeaveFormData } from "../components/pages/request/Request";
+import { SPFI } from "@pnp/sp";
+import "@pnp/sp/lists";
+import "@pnp/sp/items";
+import { addLeaveRequest } from "../services/leaveService";
+
+
+type SubmitLeaveArgs = { sp: SPFI; formData: LeaveFormData };
 
 export const submitLeave = createAsyncThunk<
-  LeaveFormData,
-  LeaveFormData,
-  { rejectValue: string }
+    LeaveFormData,
+    SubmitLeaveArgs,
+    { rejectValue: string }
 >(
     "leave/submitLeave",
-    async (formData, thunkAPI) => {
+    async ({ sp, formData }, thunkAPI) => {
         try {
-            console.log("Form data to be posted:", formData);
+            await addLeaveRequest(sp, formData);
+            alert("Data Added to SP list 🎇")
             return formData;
         } catch (error) {
             return thunkAPI.rejectWithValue(error.message);
