@@ -17,6 +17,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../../redux/store';
 import { submitLeave } from '../../../redux/leaveSlice';
 import { useNavigate } from 'react-router-dom';
+import { SPFI } from "@pnp/sp";
+
+
+interface RequestProps {
+  sp: SPFI; // ✅ receive SPFI from props
+}
 
 const leaveTypeOptions = [
     { key: 'sick', text: 'Sick Leave' },
@@ -32,7 +38,7 @@ export interface LeaveFormData {
     attachments: File[];
 }
 
-const Request = () => {
+const Request = ({ sp }: RequestProps) => {
     const navigate = useNavigate()
     const dispstch = useDispatch<AppDispatch>()
     const { loading, success, error } = useSelector((state: RootState) => state.leave)
@@ -77,7 +83,7 @@ const Request = () => {
             return;
         }
 
-        dispstch(submitLeave(formData))
+        dispstch(submitLeave({ sp, formData }))
         console.log("Form Datas", formData);
         setFormData({
             leaveType: undefined,

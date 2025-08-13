@@ -1,3 +1,5 @@
+import { SPFI } from "@pnp/sp";
+
 export interface ILeaveFormProps {
   description: string;
   isDarkTheme: boolean;
@@ -5,4 +7,5 @@ export interface ILeaveFormProps {
   hasTeamsContext: boolean;
   userDisplayName: string;
   siteUrl: string;
+  sp: SPFI
 }
