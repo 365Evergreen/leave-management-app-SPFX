@@ -1,21 +1,21 @@
 import * as React from 'react';
-import type { ILeaveFormProps } from './ILeaveFormProps';
-import { HashRouter } from 'react-router-dom';
-import Main from './Main';
 import { Provider } from 'react-redux';
-import { store } from '../redux/store';
+import { HashRouter } from 'react-router-dom';
+import { createStore } from '../redux/store';
+import Main from './Main';
+import { ILeaveFormProps } from './ILeaveFormProps';
+import { useMemo } from 'react';
 
-export default class LeaveForm extends React.Component<ILeaveFormProps> {
-  public render(): React.ReactElement<ILeaveFormProps> {
+const LeaveForm: React.FC<ILeaveFormProps> = (props) => {
+  const store = useMemo(() => createStore(props.sp), [props.sp]);
 
-    return (
-      <>
-        <Provider store={store}>
-          <HashRouter>
-            <Main />
-          </HashRouter>
-        </Provider>
-      </>
-    );
-  }
-}
+  return (
+    <Provider store={store}>
+      <HashRouter>
+        <Main/>
+      </HashRouter>
+    </Provider>
+  );
+};
+
+export default LeaveForm;

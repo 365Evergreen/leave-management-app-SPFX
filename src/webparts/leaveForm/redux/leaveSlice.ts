@@ -6,24 +6,26 @@ import "@pnp/sp/items";
 import { addLeaveRequest } from "../services/leaveService";
 
 
-type SubmitLeaveArgs = { sp: SPFI; formData: LeaveFormData };
-
 export const submitLeave = createAsyncThunk<
-    LeaveFormData,
-    SubmitLeaveArgs,
-    { rejectValue: string }
+  LeaveFormData,
+  LeaveFormData,
+  { 
+    rejectValue: string;
+    extra: { sp: SPFI };
+  }
 >(
-    "leave/submitLeave",
-    async ({ sp, formData }, thunkAPI) => {
-        try {
-            await addLeaveRequest(sp, formData);
-            alert("Data Added to SP list 🎇")
-            return formData;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
-        }
+  "leave/submitLeave",
+  async (formData, { extra, rejectWithValue }) => { // Destructure rejectWithValue from the thunkAPI
+    const { sp } = extra;
+    try {
+      await addLeaveRequest(sp, formData);
+      alert("Data Added to SP list 🎇");
+      return formData;
+    } catch (error) {
+      return rejectWithValue(error.message); // Use the destructured rejectWithValue
     }
-)
+  }
+);
 
 const leaveSlice = createSlice({
     name: "leave",

@@ -2,20 +2,21 @@ import { configureStore } from "@reduxjs/toolkit";
 import LeaveReduser from './leaveSlice'
 import { SPFI } from "@pnp/sp";
 
-// emplty store
-export const store = configureStore({
-    reducer:{
-        leave : LeaveReduser
+// Create a store creator function that accepts sp
+export const createStore = (sp: SPFI) => {
+  return configureStore({
+    reducer: {
+      leave: LeaveReduser
     },
     middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      thunk: {
-        extraArgument: {
-          sp: SPFI,
+      getDefaultMiddleware({
+        thunk: {
+          extraArgument: { sp }, // Pass the actual sp instance
         },
-      },
-    }),
-})
+        serializableCheck: false // Disable for SPFI
+      }),
+  })
+}
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<ReturnType<typeof createStore>['getState']>;
+export type AppDispatch = ReturnType<typeof createStore>['dispatch'];
