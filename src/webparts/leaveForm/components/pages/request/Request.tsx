@@ -21,7 +21,7 @@ import { SPFI } from "@pnp/sp";
 
 
 interface RequestProps {
-  sp: SPFI; // ✅ receive SPFI from props
+    sp: SPFI; // ✅ receive SPFI from props
 }
 
 const leaveTypeOptions = [
@@ -40,7 +40,7 @@ export interface LeaveFormData {
 
 const Request = ({ sp }: RequestProps) => {
     const navigate = useNavigate()
-    const dispstch = useDispatch<AppDispatch>()
+    const dispatch = useDispatch<AppDispatch>()
     const { loading, success, error } = useSelector((state: RootState) => state.leave)
     const [formSubmitted, setFormSubmitted] = useState(false);
 
@@ -76,23 +76,33 @@ const Request = ({ sp }: RequestProps) => {
         }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setFormSubmitted(true);
         // Basic validation
         if (!formData.leaveType || !formData.startDate || !formData.endDate || !formData.reason) {
             return;
         }
-
-        dispstch(submitLeave({ sp, formData }))
-        console.log("Form Datas", formData);
-        setFormData({
-            leaveType: undefined,
-            startDate: undefined,
-            endDate: undefined,
-            reason: "",
-            attachments: [] as File[]
-        })
-        setFormSubmitted(false);
+        if (formData.attachments.some(file => file.size > 5 * 1024 * 1024)) {
+            alert('One or more files exceed the 5MB limit');
+            setFormSubmitted(false);
+            return;
+        }
+        try {
+            // Just pass formData - sp is now available through Redux middleware
+            await dispatch(submitLeave(formData)).unwrap();
+            console.log("Form Datas", formData);
+            setFormData({
+                leaveType: undefined,
+                startDate: undefined,
+                endDate: undefined,
+                reason: "",
+                attachments: [] as File[]
+            });
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        } finally {
+            setFormSubmitted(false);
+        }
     }
     return (
         <Stack tokens={{ childrenGap: 20, padding: 20 }} styles={{ root: { width: 600 } }}>

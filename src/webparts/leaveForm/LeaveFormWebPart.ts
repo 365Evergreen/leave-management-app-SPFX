@@ -10,7 +10,9 @@ import { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 import * as strings from 'LeaveFormWebPartStrings';
 import LeaveForm from './components/LeaveForm';
-import { ILeaveFormProps } from './components/ILeaveFormProps';
+// import { ILeaveFormProps } from './components/ILeaveFormProps';
+import { createStore } from './redux/store';
+import { Provider } from 'react-redux';
 
 // import { sp } from "@pnp/sp";
 // import "@pnp/sp/webs";
@@ -27,6 +29,7 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
 
   private _isDarkTheme: boolean = false;
   private _environmentMessage: string = '';
+  private _store: ReturnType<typeof createStore>;
   private _sp: SPFI;
 
   public render(): void {
@@ -39,16 +42,19 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
     const siteUrl = this.context.pageContext.web.absoluteUrl;
     console.log("🌐 Current Site URL:", siteUrl);
 
-    const element: React.ReactElement<ILeaveFormProps> = React.createElement(
-      LeaveForm,
+    const element = React.createElement(
+      Provider,
       {
-        description: this.properties.description,
-        isDarkTheme: this._isDarkTheme,
-        environmentMessage: this._environmentMessage,
-        hasTeamsContext: !!this.context.sdks.microsoftTeams,
-        userDisplayName: this.context.pageContext.user.displayName,
-        siteUrl: siteUrl,
-        sp: this._sp
+        store: this._store,
+        children: React.createElement(LeaveForm, {
+          description: this.properties.description,
+          isDarkTheme: this._isDarkTheme,
+          environmentMessage: this._environmentMessage,
+          hasTeamsContext: !!this.context.sdks.microsoftTeams,
+          userDisplayName: this.context.pageContext.user.displayName,
+          siteUrl: siteUrl,
+          sp: this._sp
+        })
       }
     );
 
@@ -61,10 +67,9 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
 
   protected async onInit(): Promise<void> {
     await super.onInit();
-
     this._sp = spfi().using(SPFx(this.context));
+    this._store = createStore(this._sp); // Initialize store with sp instance
     console.log("PnPjs properly initialized...");
-
     this._environmentMessage = await this._getEnvironmentMessage();
   }
 
