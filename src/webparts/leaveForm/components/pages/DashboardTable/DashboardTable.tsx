@@ -2,6 +2,9 @@ import * as React from 'react';
 import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, PrimaryButton, Icon } from '@fluentui/react';
 import { useNavigate } from 'react-router-dom';
 import CustomPagination from '../../pagination/Pagination';
+import { fetchLeaveRequests } from '../../../redux/leaveSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../redux/store';
 
 const PAGE_SIZE = 5;
 
@@ -22,26 +25,40 @@ interface Item {
     name: string;
     status: 'Approved' | 'Pending' | 'Rejected';
     date: string;
+    reason: string;
 }
 
 
 const DashboardTable = () => {
     const navigate = useNavigate();
-
-    // Sample data
-    const items = [
-        { key: 1, name: 'Annual Leave', status: 'Approved', date: '2024-07-01', days: "3 Days" },
-        { key: 2, name: 'Sick Leave', status: 'Pending', date: '2024-07-05', days: "2 Days" },
-        { key: 3, name: 'Casual Leave', status: 'Rejected', date: '2024-07-10', days: "5 Days" },
-        { key: 4, name: 'Casual Leave', status: 'Pending', date: '2024-07-10', days: "5 Days" },
-        { key: 5, name: 'Casual Leave', status: 'Approved', date: '2024-07-10', days: "5 Days" },
-        { key: 6, name: 'Casual Leave', status: 'Pending', date: '2024-07-10', days: "5 Days" },
-        { key: 7, name: 'Casual Leave', status: 'Approved', date: '2024-07-10', days: "5 Days" },
-    ];
-
     const [currentPage, setCurrentPage] = React.useState(1);
+    const dispatch = useDispatch<AppDispatch>();
 
-    const pagedItems = items.slice(
+    const { items, loading, error } = useSelector(
+        (state: RootState) => state.leave
+    );
+
+    React.useEffect(() => {
+        dispatch(fetchLeaveRequests()); // fetch from SP on mount
+    }, [dispatch]);
+
+    const transformedItems: Item[] = items.map((spItem: any, index: number) => {
+        // Calculate number of days between StartDate and EndDate
+        const start = new Date(spItem.StartDate);
+        const end = new Date(spItem.EndDate);
+        const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
+
+        return {
+            key: spItem.Id || index,
+            name: spItem.Title || "N/A",
+            status: (spItem.Status as "Approved" | "Pending" | "Rejected") || "Pending", // default Pending if null
+            date: new Date(spItem.StartDate).toLocaleDateString(),
+            days: `${diffDays} Days`,
+            reason: spItem.Reason || "—" 
+        };
+    });
+
+    const pagedItems = transformedItems.slice(
         (currentPage - 1) * PAGE_SIZE,
         currentPage * PAGE_SIZE
     );
@@ -51,32 +68,40 @@ const DashboardTable = () => {
             key: 'column1',
             name: 'Date',
             fieldName: 'date',
-            minWidth: 250,
-            maxWidth: 250,
+            minWidth: 200,
+            maxWidth: 200,
             isResizable: false
         },
         {
             key: 'column2',
             name: 'Type',
             fieldName: 'name',
-            minWidth: 250,
-            maxWidth: 250,
+            minWidth: 200,
+            maxWidth: 200,
             isResizable: false
         },
         {
             key: 'column3',
             name: 'Days',
             fieldName: 'days',
-            minWidth: 250,
-            maxWidth: 250,
+            minWidth: 200,
+            maxWidth: 200,
             isResizable: false
         },
         {
             key: 'column4',
+            name: 'Reason',
+            fieldName: 'reason',
+            minWidth: 200,
+            maxWidth: 200,
+            isResizable: false
+        },
+        {
+            key: 'column5',
             name: 'Status',
             fieldName: 'status',
-            minWidth: 250,
-            maxWidth: 250,
+            minWidth: 200,
+            maxWidth: 200,
             isResizable: false,
             onRender: (item: Item) => {
                 const bgColor = statusColors[item.status];
@@ -99,6 +124,8 @@ const DashboardTable = () => {
         },
     ];
 
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div style={{ color: "red" }}>{error}</div>;
     return (
         <div style={{ marginTop: 20 }}>
 
@@ -122,7 +149,7 @@ const DashboardTable = () => {
                             color: 'white',
                         },
                         rootHovered: {
-                            backgroundColor: 'var(--theme-color-hover)', 
+                            backgroundColor: 'var(--theme-color-hover)',
                             color: 'white',
                         },
                         rootPressed: {
