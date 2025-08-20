@@ -21,6 +21,7 @@ export const addLeaveRequest = async (sp: SPFI, formData: LeaveFormData) => {
       StartDate: formData.startDate ?? null,
       EndDate: formData.endDate ?? null,
       Reason: formData.reason || "",
+      Status:"Pending"
     });
 
     console.log("itemAddResult", itemAddResult);
@@ -52,5 +53,16 @@ export const addLeaveRequest = async (sp: SPFI, formData: LeaveFormData) => {
   } catch (error) {
     console.error("Error in addLeaveRequest:", error);
     throw error;
+  }
+};
+
+export const LeaveRequest = async (sp: SPFI) => {
+  const listName = "LeaveRequests";
+  try {
+    const listItems = await sp.web.lists.getByTitle(listName).items();
+    return listItems;
+  } catch (error) {
+    console.log("Error fetching leave requests:", error);
+    return [];
   }
 };
