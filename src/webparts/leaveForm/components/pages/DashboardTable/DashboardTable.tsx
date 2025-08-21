@@ -2,9 +2,8 @@ import * as React from 'react';
 import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, PrimaryButton, Icon } from '@fluentui/react';
 import { useNavigate } from 'react-router-dom';
 import CustomPagination from '../../pagination/Pagination';
-import { fetchLeaveRequests } from '../../../redux/leaveSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../redux/store';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
 
 const PAGE_SIZE = 5;
 
@@ -32,15 +31,10 @@ interface Item {
 const DashboardTable = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = React.useState(1);
-    const dispatch = useDispatch<AppDispatch>();
 
     const { items, loading, error } = useSelector(
         (state: RootState) => state.leave
     );
-
-    React.useEffect(() => {
-        dispatch(fetchLeaveRequests()); // fetch from SP on mount
-    }, [dispatch]);
 
     const transformedItems: Item[] = items.map((spItem: any, index: number) => {
         // Calculate number of days between StartDate and EndDate

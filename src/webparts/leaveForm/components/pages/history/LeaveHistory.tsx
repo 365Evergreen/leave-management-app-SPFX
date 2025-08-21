@@ -1,29 +1,39 @@
 import * as React from 'react';
 import './History.css'
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
+
+interface Item {
+    name: string;
+    status: 'Approved' | 'Pending' | 'Rejected';
+    id?: number;
+    Title?: string;
+    date?: string;
+    reason?: string;
+    days: string;
+}
 
 const LeaveHistory = () => {
-    // Sample data - replace this with SharePoint list data
-    const leaveHistoryData = [
-        {
-            id: 1,
-            leaveType: 'Annual Leave',
-            status: 'Approved',
-            days: 5,
-        },
-        {
-            id: 2,
-            leaveType: 'Sick Leave',
-            status: 'Pending',
-            days: 2,
+    const { items, loading, error } = useSelector(
+        (state: RootState) => state.leave
+    );
 
-        },
-        {
-            id: 3,
-            leaveType: 'Personal Leave',
-            status: 'Rejected',
-            days: 3,
-        }
-    ];
+    const transformedItems: Item[] = items.map((spItem: any, index: number) => {
+        // Calculate number of days between StartDate and EndDate
+        const start = new Date(spItem.StartDate);
+        const end = new Date(spItem.EndDate);
+        const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
+
+        return {
+            key: spItem.Id || index,
+            name: spItem.Title || "N/A",
+            status: (spItem.Status as "Approved" | "Pending" | "Rejected") || "Pending", // default Pending if null
+            date: new Date(spItem.StartDate).toLocaleDateString(),
+            days: `${diffDays} Days`,
+            reason: spItem.Reason || "—" 
+        };
+    });
+
 
     // Function to get status class dynamically
     const getStatusClass = (status: string) => {
@@ -38,6 +48,8 @@ const LeaveHistory = () => {
                 return 'status-pending'; // fallback
         }
     };
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div style={{ color: "red" }}>{error}</div>;
     return (
         <div className='parent-LeaveHistory'>
             <div className='header'>
@@ -56,12 +68,12 @@ const LeaveHistory = () => {
                 </div>
             </div>
             <div className='History-cards'>
-                {leaveHistoryData.map((leave) => (
+                {transformedItems.map((leave) => (
                     <div key={leave.id} className='card-details'>
                         <div className='card-content'>
                             <div className='card-item'>
                                 <span className='card-label'>Leave Type</span>
-                                <span className='card-value'>{leave.leaveType}</span>
+                                <span className='card-value'>{leave.name}</span>
                             </div>
                             <div className='card-item status'>
                                 <span className='card-label'>Status</span>

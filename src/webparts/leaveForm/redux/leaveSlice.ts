@@ -36,6 +36,7 @@ export const fetchLeaveRequests = createAsyncThunk<
   "leave/fetchLeaveRequests",
   async (_, { extra, rejectWithValue }) => {
     const { sp } = extra;
+    if (!sp) return [];
     try {
       const items = await LeaveRequest(sp);
       console.log("Sp List Items : ✨", items);
@@ -79,7 +80,7 @@ const leaveSlice = createSlice({
       })
       .addCase(fetchLeaveRequests.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload; // ✅ save SP list items
+        state.items = action.payload;
       })
       .addCase(fetchLeaveRequests.rejected, (state, action) => {
         state.loading = false;
