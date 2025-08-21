@@ -7,15 +7,30 @@ import {
     DismissCircle20Filled,
     PeopleTeam20Filled
 } from '@fluentui/react-icons';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
 
 const History = () => {
+    const { items, loading, error } = useSelector(
+        (state: RootState) => state.leave
+    );
+
+    // ✅ Calculate summary
+    const totalLeaves = items.length;
+
+    const pendingCount = items.filter(i => i.Status === "Pending").length;
+    const approvedCount = items.filter(i => i.Status === "Approved").length;
+    const rejectedCount = items.filter(i => i.Status === "Rejected").length;
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div style={{ color: "red" }}>{error}</div>;
     return (
         <>
             <div className="parent-div">
                 <div className="box1">
                     <div className="box-content">
                         <div>
-                            <span className="num">3</span>
+                            <span className="num">{approvedCount}</span>
                             <span>Approved</span>
                         </div>
                         <CheckmarkCircle20Filled className="box-icon approved" />
@@ -24,7 +39,7 @@ const History = () => {
                 <div className="box2">
                     <div className="box-content">
                         <div>
-                            <span className="num">1</span>
+                            <span className="num">{pendingCount}</span>
                             <span>Pending</span>
                         </div>
                         <Clock20Filled className="box-icon pending" />
@@ -33,7 +48,7 @@ const History = () => {
                 <div className="box3">
                     <div className="box-content">
                         <div>
-                            <span className="num">2</span>
+                            <span className="num">{rejectedCount}</span>
                             <span>Rejected</span>
                         </div>
                         <DismissCircle20Filled className="box-icon rejected" />
@@ -42,7 +57,7 @@ const History = () => {
                 <div className="box4">
                     <div className="box-content">
                         <div>
-                            <span className="num">5</span>
+                            <span className="num">{totalLeaves}</span>
                             <span>Total Requests</span>
                         </div>
                         <PeopleTeam20Filled className="box-icon total" />
