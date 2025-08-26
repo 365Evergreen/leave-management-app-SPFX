@@ -2,6 +2,7 @@ import * as React from 'react';
 import './History.css'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
+import { useState } from 'react';
 
 interface Item {
     name: string;
@@ -17,6 +18,8 @@ const LeaveHistory = () => {
     const { items, loading, error } = useSelector(
         (state: RootState) => state.leave
     );
+    const [filterType, setFilterType] = useState('');
+    const [statusSearch, setStatusSearch] = useState('');
 
     const transformedItems: Item[] = items.map((spItem: any, index: number) => {
         // Calculate number of days between StartDate and EndDate
@@ -30,8 +33,21 @@ const LeaveHistory = () => {
             status: (spItem.Status as "Approved" | "Pending" | "Rejected") || "Pending", // default Pending if null
             date: new Date(spItem.StartDate).toLocaleDateString(),
             days: `${diffDays} Days`,
-            reason: spItem.Reason || "—" 
+            reason: spItem.Reason || "—"
         };
+    });
+
+    // Function to handle filtering
+    const filteredItems = transformedItems.filter((leave) => {
+        // Filter by leave type (dropdown)
+        const typeMatch = filterType === '' || leave.name.toLowerCase().includes(filterType.toLowerCase());
+
+        // Filter by status (input, case-insensitive match)
+        const statusMatch =
+            statusSearch === '' ||
+            leave.status.toLowerCase().includes(statusSearch.toLowerCase());
+
+        return typeMatch && statusMatch;
     });
 
 
@@ -57,18 +73,27 @@ const LeaveHistory = () => {
                     <h4>Leave History Details</h4>
                 </div>
                 <div className='history-btn'>
-                    <select className="filter-dropdown" defaultValue="">
+                    <select
+                        className="filter-dropdown"
+                        defaultValue=""
+                        value={filterType}
+                        onChange={(e) => setFilterType(e.target.value)}
+                    >
                         <option value="">All Types</option>
-                        <option value="Annual Leave">Annual Leave</option>
-                        <option value="Sick Leave">Sick Leave</option>
-                        <option value="Casual Leave">Casual Leave</option>
-                        <option value="Personal Leave">Personal Leave</option>
+                        <option value="sick">Sick Leave</option>
+                        <option value="casual">Casual Leave</option>
+                        <option value="earned">Earned Leave</option>
                     </select>
-                    <input type="search" placeholder='Search by status' />
+                    <input
+                        type="search"
+                        placeholder='Search by status'
+                        value={statusSearch}
+                        onChange={(e) => setStatusSearch(e.target.value)}
+                    />
                 </div>
             </div>
             <div className='History-cards'>
-                {transformedItems.map((leave) => (
+                {filteredItems.map((leave) => (
                     <div key={leave.id} className='card-details'>
                         <div className='card-content'>
                             <div className='card-item'>
