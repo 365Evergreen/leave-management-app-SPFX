@@ -8,17 +8,16 @@ import {
     Stack,
     Label,
     Icon,
-    MessageBar,
-    MessageBarType
 } from '@fluentui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Request.css'
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../../redux/store';
 import { submitLeave } from '../../../redux/leaveSlice';
 import { useNavigate } from 'react-router-dom';
 import { SPFI } from "@pnp/sp";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface RequestProps {
     sp: SPFI; // ✅ receive SPFI from props
@@ -83,7 +82,7 @@ const Request = ({ sp }: RequestProps) => {
             return;
         }
         if (formData.attachments.some(file => file.size > 5 * 1024 * 1024)) {
-            alert('One or more files exceed the 5MB limit');
+            toast.error("One or more files exceed the 5MB limit");
             setFormSubmitted(false);
             return;
         }
@@ -104,6 +103,17 @@ const Request = ({ sp }: RequestProps) => {
             setFormSubmitted(false);
         }
     }
+
+    // 🔔 Show toast on success/error
+    useEffect(() => {
+        if (success) {
+            toast.success("Leave request submitted successfully!");
+        }
+        if (error) {
+            toast.error(error);
+        }
+    }, [success, error]);
+
     return (
         <Stack tokens={{ childrenGap: 20, padding: 20 }} styles={{ root: { width: 600 } }}>
             {/* Leave Type */}
@@ -204,8 +214,6 @@ const Request = ({ sp }: RequestProps) => {
                 )}
             </Stack>
 
-
-
             {/* Buttons */}
             <Stack horizontal tokens={{ childrenGap: 10 }}>
                 <PrimaryButton
@@ -216,17 +224,11 @@ const Request = ({ sp }: RequestProps) => {
                 <DefaultButton text="Cancel" onClick={() => navigate('/')} />
             </Stack>
 
-            {/* Show success or error message */}
-            {success && (
-                <MessageBar messageBarType={MessageBarType.success} isMultiline={false}>
-                    Leave request submitted successfully!
-                </MessageBar>
-            )}
-            {error && (
-                <MessageBar messageBarType={MessageBarType.error} isMultiline={false}>
-                    {error}
-                </MessageBar>
-            )}
+            {/* Toast Container */}
+            <ToastContainer 
+              position="bottom-right" 
+              autoClose={3000} 
+            />
         </Stack>
     )
 }
