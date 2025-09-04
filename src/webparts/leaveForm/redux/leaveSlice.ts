@@ -19,7 +19,7 @@ export const submitLeave = createAsyncThunk<
     const { sp } = extra;
     try {
       await addLeaveRequest(sp, formData);
-      alert("Data Added to SP list 🎇");
+      console.log("Data Added to SP list ");
       return formData;
     } catch (error) {
       return rejectWithValue(error.message); // Use the destructured rejectWithValue
@@ -39,7 +39,7 @@ export const fetchLeaveRequests = createAsyncThunk<
     if (!sp) return [];
     try {
       const items = await LeaveRequest(sp);
-      console.log("Sp List Items : ✨", items);
+      console.log("Sp List Items : ", items);
       return items;
     } catch (error) {
       return rejectWithValue((error as Error).message);
