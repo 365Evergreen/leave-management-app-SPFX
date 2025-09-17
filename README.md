@@ -1,73 +1,98 @@
-# leave-management-system
+📋 Leave Management System (SPFx Web Part)
+A modern, integrated solution for leave requests, approvals, and tracking built with SharePoint Framework, React, Redux, and Power Automate.
 
-## Summary
+🚀 Project Overview
+As a SharePoint Support Specialist, I developed this SPFx web part to streamline leave management processes in organizations. This solution replaces manual email/spreadsheet tracking with an automated, user-friendly system integrated directly into SharePoint.
 
-Short summary on functionality and used technologies.
+Key Workflow:
 
-[picture of the solution in action, if possible]
+Users submit leave requests via a React-based form.
+Data is stored in a SharePoint list with a "Pending" status.
+Power Automate triggers approval workflows:
+First-level approver notified via email.
+If approved, escalates to next approver.
+If rejected, initiator receives notification.
+Dashboard displays real-time leave stats (pending/approved/rejected).
+History page allows filtering by leave type/status.
+🎯 Core Features
+Feature	Description
+Leave Request Form	Intuitive Fluent UI form for submitting leave details (type, dates, reason).
+Real-Time Dashboard	Homepage shows pending/approved/rejected leave counts & recent requests.
+Approval Workflow	Multi-stage approvals via Power Automate with email notifications.
+History & Filtering	Track all leave requests with filters for type/status (e.g., "Sick Leave" + "Approved").
+SharePoint Integration	Data stored in a SharePoint list for auditability and reporting.
+Responsive Design	Works seamlessly across desktop/mobile SharePoint experiences.
+🛠️ Technologies Used
+Category	Tools & Frameworks
+Frontend	React, Redux (State Management), Fluent UI (UI Components)
+SharePoint	SPFx v1.16+, SharePoint Lists, Power Automate (Workflow Automation)
+Backend	SharePoint REST API, Power Automate Cloud Flows
+DevOps	GitHub (Code Hosting), Azure DevOps (Optional CI/CD)
+Styling	Fluent UI Theming, CSS Modules
+📸 Screenshots
+Visual walkthrough of the solution:
 
-## Used SharePoint Framework Version
+Section	Screenshot
+Home Dashboard	Home PagePending/Approved/Rejected leave stats
+Leave Request Form	Request FormFluent UI form with validation
+History Page	HistoryFilterable leave history table
+SharePoint List	SP ListData stored in SharePoint
+Power Automate Flow	Power AutomateApproval workflow execution
+(Add your screenshots in an /assets folder and reference them here)
 
-![version](https://img.shields.io/badge/version-1.21.1-green.svg)
+⚙️ Setup & Installation
+Prerequisites:
 
-## Applies to
+Node.js v16+
+SharePoint Framework (SPFx) v1.16+
+Power Automate License
+SharePoint Admin/Owner Permissions
+Steps to Deploy:
 
-- [SharePoint Framework](https://aka.ms/spfx)
-- [Microsoft 365 tenant](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-developer-tenant)
+Clone Repository:
 
-> Get your own free development tenant by subscribing to [Microsoft 365 developer program](http://aka.ms/o365devprogram)
+Bash
 
-## Prerequisites
+git clone https://github.com/your-username/leave-management-spfx.git
+cd leave-management-spfx
+Install Dependencies:
 
-> Any special pre-requisites?
+Bash
 
-## Solution
+npm install
+Build & Bundle:
 
-| Solution    | Author(s)                                               |
-| ----------- | ------------------------------------------------------- |
-| folder name | Author details (name, company, twitter alias with link) |
+Bash
 
-## Version history
+gulp build
+gulp bundle --ship
+gulp package-solution --ship
+Deploy to SharePoint App Catalog:
 
-| Version | Date             | Comments        |
-| ------- | ---------------- | --------------- |
-| 1.1     | March 10, 2021   | Update comment  |
-| 1.0     | January 29, 2021 | Initial release |
+Upload the generated .sppkg file to your SharePoint App Catalog.
+Trust the solution when prompted.
+Configure Power Automate Flow:
 
-## Disclaimer
+Create a new Cloud Flow in Power Automate.
+Trigger: "When an item is created or modified" in your SharePoint list.
+Actions:
+Send approval email to first-level approver.
+Conditional logic for approval/rejection.
+Update item status in SharePoint list.
+Send notifications to initiator/approvers.
+Test flow with sample data.
+Add Web Part to SharePoint Page:
 
-**THIS CODE IS PROVIDED _AS IS_ WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
-
----
-
-## Minimal Path to Awesome
-
-- Clone this repository
-- Ensure that you are at the solution folder
-- in the command-line run:
-  - **npm install**
-  - **gulp serve**
-
-> Include any additional steps as needed.
-
-## Features
-
-Description of the extension that expands upon high-level summary above.
-
-This extension illustrates the following concepts:
-
-- topic 1
-- topic 2
-- topic 3
-
-> Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
-
-> Share your web part with others through Microsoft 365 Patterns and Practices program to get visibility and exposure. More details on the community, open-source projects and other activities from http://aka.ms/m365pnp.
-
-## References
-
-- [Getting started with SharePoint Framework](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/set-up-your-developer-tenant)
-- [Building for Microsoft teams](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/build-for-teams-overview)
-- [Use Microsoft Graph in your solution](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/get-started/using-microsoft-graph-apis)
-- [Publish SharePoint Framework applications to the Marketplace](https://docs.microsoft.com/en-us/sharepoint/dev/spfx/publish-to-marketplace-overview)
-- [Microsoft 365 Patterns and Practices](https://aka.ms/m365pnp) - Guidance, tooling, samples and open-source controls for your Microsoft 365 development
+Edit a modern SharePoint page.
+Add the "Leave Management" web part.
+Configure properties (e.g., target SharePoint list).
+🔮 Future Enhancements
+Reporting & Analytics: Add Power BI integration for leave trends.
+Mobile Push Notifications: Use Microsoft Graph API for real-time alerts.
+Multi-Language Support: Internationalize UI for global teams.
+Calendar Integration: Sync approved leaves with Outlook/Teams calendars.
+Advanced Approval Rules: Dynamic approvers based on department/leave type.
+🤝 Contribution & Support
+Report Issues: Use GitHub Issues for bugs/feature requests.
+Pull Requests: Welcome contributions! Follow code standards & add tests.
+Contact: [LinkedIn Profile] | [Email]
