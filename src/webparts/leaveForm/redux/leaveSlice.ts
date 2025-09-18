@@ -29,7 +29,7 @@ export const submitLeave = createAsyncThunk<
 
 // slice file
 export const fetchLeaveRequests = createAsyncThunk<
-  any[], // type of items returned
+  Record<string, unknown>[], // type of items returned
   void,
   { rejectValue: string; extra: { sp: SPFI } }
 >(
@@ -54,7 +54,7 @@ const leaveSlice = createSlice({
     loading: false,
     success: false,
     error: null as string | null,
-    items: [] as any[],
+  items: [] as Record<string, unknown>[],
   },
   reducers: {},
   extraReducers: (builder) => {

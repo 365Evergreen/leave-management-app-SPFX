@@ -6,7 +6,7 @@ import History from '../pages/history/History';
 import { SPFI } from "@pnp/sp";
 
 
-const AppRoutes = () => {
+const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Dashboard />} />

@@ -11,8 +11,9 @@ import {
 } from '@fluentui/react';
 import { useState, useEffect } from 'react';
 import './Request.css'
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../../../redux/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../redux/store';
+import { useSelector } from 'react-redux';
 import { submitLeave } from '../../../redux/leaveSlice';
 import { useNavigate } from 'react-router-dom';
 import { SPFI } from "@pnp/sp";
@@ -37,10 +38,19 @@ export interface LeaveFormData {
     attachments: File[];
 }
 
-const Request = ({ sp }: RequestProps) => {
+const Request: React.FC<RequestProps> = ({ sp }) => {
     const navigate = useNavigate()
-    const dispatch = useDispatch<AppDispatch>()
-    const { loading, success, error } = useSelector((state: RootState) => state.leave)
+    const dispatch: AppDispatch = useDispatch();
+    interface LeaveState {
+        items: Record<string, unknown>[];
+        loading: boolean;
+        success: boolean;
+        error: string | null;
+    }
+    function selectLeave(state: { leave: LeaveState }): LeaveState {
+        return state.leave;
+    }
+    const { loading, success, error } = useSelector(selectLeave);
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const [formData, setFormData] = useState<LeaveFormData>({
@@ -51,7 +61,7 @@ const Request = ({ sp }: RequestProps) => {
         attachments: [] as File[]
     })
 
-    const handlechange = (field: string, value: any) => {
+    const handlechange = (field: string, value: string | number | Date | File[] | null | undefined): void => {
         setFormData(prev => ({
             ...prev,
             [field]: value
@@ -59,7 +69,7 @@ const Request = ({ sp }: RequestProps) => {
     }
 
     // Handle File Selection
-    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (e.target.files) {
             // Convert FileList to Array
             const files = Array.from(e.target.files);
@@ -75,7 +85,7 @@ const Request = ({ sp }: RequestProps) => {
         }
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (): Promise<void> => {
         setFormSubmitted(true);
         // Basic validation
         if (!formData.leaveType || !formData.startDate || !formData.endDate || !formData.reason) {
@@ -88,7 +98,7 @@ const Request = ({ sp }: RequestProps) => {
         }
         try {
             // Just pass formData - sp is now available through Redux middleware
-            await dispatch(submitLeave(formData)).unwrap();
+            await dispatch<any>(submitLeave(formData)).unwrap();
             console.log("Form Datas", formData);
             setFormData({
                 leaveType: undefined,

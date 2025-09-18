@@ -3,7 +3,6 @@ import { DetailsList, DetailsListLayoutMode, SelectionMode, IColumn, PrimaryButt
 import { useNavigate } from 'react-router-dom';
 import CustomPagination from '../../pagination/Pagination';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
 
 const PAGE_SIZE = 5;
 
@@ -25,28 +24,35 @@ interface Item {
     status: 'Approved' | 'Pending' | 'Rejected';
     date: string;
     reason: string;
+    days: string;
 }
 
 
-const DashboardTable = () => {
+const DashboardTable: React.FC = () => {
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = React.useState(1);
 
-    const { items, loading, error } = useSelector(
-        (state: RootState) => state.leave
-    );
+    interface LeaveState {
+        items: Record<string, unknown>[];
+        loading: boolean;
+        error: string | null;
+    }
+    function selectLeave(state: { leave: LeaveState }): LeaveState {
+        return state.leave;
+    }
+    const { items, loading, error } = useSelector(selectLeave);
 
-    const transformedItems: Item[] = items.map((spItem: any, index: number) => {
+    const transformedItems: Item[] = items.map((spItem: { [key: string]: unknown; StartDate?: string; EndDate?: string; Id?: number; Title?: string; Status?: string; Reason?: string }, index: number): Item => {
         // Calculate number of days between StartDate and EndDate
-        const start = new Date(spItem.StartDate);
-        const end = new Date(spItem.EndDate);
+        const start = new Date(spItem.StartDate ?? '');
+        const end = new Date(spItem.EndDate ?? '');
         const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
 
         return {
             key: spItem.Id || index,
             name: spItem.Title || "N/A",
             status: (spItem.Status as "Approved" | "Pending" | "Rejected") || "Pending", // default Pending if null
-            date: new Date(spItem.StartDate).toLocaleDateString(),
+            date: new Date(spItem.StartDate ?? '').toLocaleDateString(),
             days: `${diffDays} Days`,
             reason: spItem.Reason || "—" 
         };

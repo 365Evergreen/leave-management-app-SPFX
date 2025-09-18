@@ -4,7 +4,7 @@ import { Stack, DefaultButton, PrimaryButton, Text } from '@fluentui/react';
 import './Header.css';
 
 
-const Header = () => {
+const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 

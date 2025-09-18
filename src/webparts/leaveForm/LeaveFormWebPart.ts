@@ -44,18 +44,15 @@ export default class LeaveFormWebPart extends BaseClientSideWebPart<ILeaveFormWe
 
     const element = React.createElement(
       Provider,
-      {
-        store: this._store,
-        children: React.createElement(LeaveForm, {
-          description: this.properties.description,
-          isDarkTheme: this._isDarkTheme,
-          environmentMessage: this._environmentMessage,
-          hasTeamsContext: !!this.context.sdks.microsoftTeams,
-          userDisplayName: this.context.pageContext.user.displayName,
-          siteUrl: siteUrl,
-          sp: this._sp
-        })
-      }
+      { store: this._store, children: React.createElement(LeaveForm, {
+        description: this.properties.description,
+        isDarkTheme: this._isDarkTheme,
+        environmentMessage: this._environmentMessage,
+        hasTeamsContext: !!this.context.sdks.microsoftTeams,
+        userDisplayName: this.context.pageContext.user.displayName,
+        siteUrl: siteUrl,
+        sp: this._sp
+      }) }
     );
 
     ReactDom.render(element, this.domElement);

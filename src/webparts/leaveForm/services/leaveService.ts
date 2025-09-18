@@ -5,7 +5,7 @@ import "@pnp/sp/items";
 import "@pnp/sp/files";
 import { LeaveFormData } from "../components/pages/request/Request";
 
-export const addLeaveRequest = async (sp: SPFI, formData: LeaveFormData) => {
+export const addLeaveRequest = async (sp: SPFI, formData: LeaveFormData): Promise<{ itemId: number; [key: string]: unknown }> => {
   if (!sp) {
     throw new Error("SP context not initialized");
   }
@@ -56,7 +56,7 @@ export const addLeaveRequest = async (sp: SPFI, formData: LeaveFormData) => {
   }
 };
 
-export const LeaveRequest = async (sp: SPFI) => {
+export const LeaveRequest = async (sp: SPFI): Promise<{ [key: string]: unknown }[]> => {
   const listName = "LeaveRequests";
   try {
     const listItems = await sp.web.lists.getByTitle(listName).items();

@@ -1,37 +1,41 @@
 import * as React from 'react';
 import './History.css'
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
 import { useState } from 'react';
 
 interface Item {
+    key: number;
     name: string;
     status: 'Approved' | 'Pending' | 'Rejected';
-    id?: number;
-    Title?: string;
-    date?: string;
-    reason?: string;
+    date: string;
+    reason: string;
     days: string;
 }
 
-const LeaveHistory = () => {
-    const { items, loading, error } = useSelector(
-        (state: RootState) => state.leave
-    );
+const LeaveHistory: React.FC = () => {
+    interface LeaveState {
+        items: Record<string, unknown>[];
+        loading: boolean;
+        error: string | null;
+    }
+    function selectLeave(state: { leave: LeaveState }): LeaveState {
+        return state.leave;
+    }
+    const { items, loading, error } = useSelector(selectLeave);
     const [filterType, setFilterType] = useState('');
     const [statusSearch, setStatusSearch] = useState('');
 
-    const transformedItems: Item[] = items.map((spItem: any, index: number) => {
+    const transformedItems: Item[] = items.map((spItem: { [key: string]: unknown; StartDate?: string; EndDate?: string; Id?: number; Title?: string; Status?: string; Reason?: string }, index: number): Item => {
         // Calculate number of days between StartDate and EndDate
-        const start = new Date(spItem.StartDate);
-        const end = new Date(spItem.EndDate);
+        const start = new Date(spItem.StartDate ?? '');
+        const end = new Date(spItem.EndDate ?? '');
         const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1;
 
         return {
             key: spItem.Id || index,
             name: spItem.Title || "N/A",
             status: (spItem.Status as "Approved" | "Pending" | "Rejected") || "Pending", // default Pending if null
-            date: new Date(spItem.StartDate).toLocaleDateString(),
+            date: new Date(spItem.StartDate ?? '').toLocaleDateString(),
             days: `${diffDays} Days`,
             reason: spItem.Reason || "—"
         };
@@ -52,7 +56,7 @@ const LeaveHistory = () => {
 
 
     // Function to get status class dynamically
-    const getStatusClass = (status: string) => {
+    const getStatusClass = (status: string): string => {
         switch (status.toLowerCase()) {
             case 'approved':
                 return 'status-approved';
@@ -94,7 +98,7 @@ const LeaveHistory = () => {
             </div>
             <div className='History-cards'>
                 {filteredItems.map((leave) => (
-                    <div key={leave.id} className='card-details'>
+                    <div key={leave.key} className='card-details'>
                         <div className='card-content'>
                             <div className='card-item'>
                                 <span className='card-label'>Leave Type</span>

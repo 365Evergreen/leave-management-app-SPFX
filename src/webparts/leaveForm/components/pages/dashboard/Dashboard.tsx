@@ -3,19 +3,27 @@ import './dashboard.css'
 import { Icon } from '@fluentui/react';
 import DashboardTable from '../DashboardTable/DashboardTable';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
 
-const Dashboard = () => {
-    const { items, loading, error } = useSelector(
-        (state: RootState) => state.leave
-    );
+const Dashboard: React.FC = () => {
+    interface LeaveState {
+        items: Record<string, unknown>[];
+        loading: boolean;
+        error: string | null;
+    }
+    function selectLeave(state: { leave: LeaveState }): LeaveState {
+        return state.leave;
+    }
+    const { items, loading, error } = useSelector(selectLeave);
 
     // ✅ Calculate summary
     const totalLeaves = items.length;
 
-    const pendingCount = items.filter(i => i.Status === "Pending").length;
-    const approvedCount = items.filter(i => i.Status === "Approved").length;
-    const rejectedCount = items.filter(i => i.Status === "Rejected").length;
+    interface LeaveItem {
+        Status?: string;
+    }
+    const pendingCount = items.filter((i: LeaveItem) => i.Status === "Pending").length;
+    const approvedCount = items.filter((i: LeaveItem) => i.Status === "Approved").length;
+    const rejectedCount = items.filter((i: LeaveItem) => i.Status === "Rejected").length;
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div style={{ color: "red" }}>{error}</div>;

@@ -6,11 +6,12 @@ import { useDispatch } from 'react-redux/es/hooks/useDispatch';
 import { fetchLeaveRequests } from '../redux/leaveSlice';
 import { AppDispatch } from '../redux/store';
 
-const Main = () => {
+const Main: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   
   React.useEffect(() => {
-    dispatch(fetchLeaveRequests()); // Fetch once when app loads
+    // Fetch once when app loads
+    dispatch(fetchLeaveRequests() as any);
   }, [dispatch]);
   
     return(
